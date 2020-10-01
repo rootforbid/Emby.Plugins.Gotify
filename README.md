@@ -3,11 +3,7 @@ Gotify notifications for your Emby server.
 
 ## Installation
 
-You can install this plugin directly via Emby Server's plugin catalog
-
-OR
-
-You can download the latest DLL file on the release page of this repo, put it in the "plugins" folder of your Emby Server and restart Emby Server.
+Download the latest DLL file on the release page of this repo, put it in the "plugins" folder of your Emby Server and restart Emby Server.
 The plugin should now show up in your Emby Server management page under Advanced > Plugins.
 
 ## Credits
