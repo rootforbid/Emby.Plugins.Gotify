@@ -1,6 +1,5 @@
 # Emby.Plugins.Gotify
-Gotify notifications for your Emby server.  
-*Certified working on Ember Server* `4.5.1.0`
+Gotify notifications for your Emby Server, certified working on `4.5.1.0`
 
 ## Installation
 
