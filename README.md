@@ -1,5 +1,5 @@
 # Emby.Plugins.Gotify
-Gotify notifications for your Emby Server, certified working on `4.6.0.50`
+Gotify notifications for your Emby Server, certified working on `4.6.3.0`
 
 ## Installation
 
