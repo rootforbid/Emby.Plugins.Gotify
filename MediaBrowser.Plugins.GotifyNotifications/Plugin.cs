@@ -4,22 +4,18 @@ using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Model.Plugins;
 using MediaBrowser.Model.Serialization;
-using MediaBrowser.Plugins.GotifyNotifications.Configuration;
 using System.IO;
 using MediaBrowser.Model.Drawing;
+using System.Linq;
 
 namespace MediaBrowser.Plugins.GotifyNotifications
 {
     /// <summary>
     /// Class Plugin
     /// </summary>
-    public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages, IHasThumbImage
+    public class Plugin : BasePlugin, IHasWebPages, IHasThumbImage, IHasTranslations
     {
-        public Plugin(IApplicationPaths applicationPaths, IXmlSerializer xmlSerializer)
-            : base(applicationPaths, xmlSerializer)
-        {
-            Instance = this;
-        }
+        private const string EditorJsName = "gotifynotificationeditorjs";
 
         public IEnumerable<PluginPageInfo> GetPages()
         {
@@ -27,10 +23,34 @@ namespace MediaBrowser.Plugins.GotifyNotifications
             {
                 new PluginPageInfo
                 {
-                    Name = Name,
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.config.html"
+                    Name = EditorJsName,
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.entryeditor.js"
+                },
+                new PluginPageInfo
+                {
+                    Name = "gotifyeditortemplate",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.entryeditor.template.html",
+                    IsMainConfigPage = false
                 }
             };
+        }
+
+        public string NotificationSetupModuleUrl => GetPluginPageUrl(EditorJsName);
+
+        public TranslationInfo[] GetTranslations()
+        {
+            var basePath = GetType().Namespace + ".strings.";
+
+            return GetType()
+                .Assembly
+                .GetManifestResourceNames()
+                .Where(i => i.StartsWith(basePath, StringComparison.OrdinalIgnoreCase))
+                .Select(i => new TranslationInfo
+                {
+                    Locale = Path.GetFileNameWithoutExtension(i.Substring(basePath.Length)),
+                    EmbeddedResourcePath = i
+
+                }).ToArray();
         }
 
         private Guid _id = new Guid("4002dda8-022c-47a9-bdb7-2847636bb73a");
@@ -39,13 +59,15 @@ namespace MediaBrowser.Plugins.GotifyNotifications
             get { return _id; }
         }
 
+        public static string StaticName = "Gotify";
+
         /// <summary>
         /// Gets the name of the plugin
         /// </summary>
         /// <value>The name.</value>
         public override string Name
         {
-            get { return "Gotify Notifications"; }
+            get { return StaticName + " Notifications"; }
         }
 
         /// <summary>
@@ -73,11 +95,5 @@ namespace MediaBrowser.Plugins.GotifyNotifications
                 return ImageFormat.Png;
             }
         }
-
-        /// <summary>
-        /// Gets the instance.
-        /// </summary>
-        /// <value>The instance.</value>
-        public static Plugin Instance { get; private set; }
     }
 }

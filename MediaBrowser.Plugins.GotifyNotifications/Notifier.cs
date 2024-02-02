@@ -3,55 +3,52 @@ using MediaBrowser.Common.Net;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Notifications;
 using MediaBrowser.Model.Logging;
-using MediaBrowser.Plugins.GotifyNotifications.Configuration;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Emby.Notifications;
+using MediaBrowser.Controller.Configuration;
+using MediaBrowser.Controller;
 
 namespace MediaBrowser.Plugins.GotifyNotifications
 {
-    public class Notifier : INotificationService
+    public class Notifier : IUserNotifier
     {
-        private readonly ILogger _logger;
-        private readonly IHttpClient _httpClient;
+        private ILogger _logger;
+        private IServerApplicationHost _appHost;
+        private IHttpClient _httpClient;
 
-        public Notifier(ILogManager logManager, IHttpClient httpClient)
+        public Notifier(ILogger logger, IServerApplicationHost applicationHost, IHttpClient httpClient)
         {
-            _logger = logManager.GetLogger(GetType().Name);
+            _logger = logger;
+            _appHost = applicationHost;
             _httpClient = httpClient;
         }
 
-        public bool IsEnabledForUser(User user)
-        {
-            var options = GetOptions(user);
+        private Plugin Plugin => _appHost.Plugins.OfType<Plugin>().First();
 
-            return options != null && IsValid(options) && options.Enabled;
-        }
+        public string Name => Plugin.StaticName;
 
-        private GotifyOptions GetOptions(User user)
-        {
-            return Plugin.Instance.Configuration.Options
-                .FirstOrDefault(i => string.Equals(i.MediaBrowserUserId, user.Id.ToString("N"), StringComparison.OrdinalIgnoreCase));
-        }
+        public string Key => "gotifynotifications";
 
-        public string Name
-        {
-            get { return Plugin.Instance.Name; }
-        }
+        public string SetupModuleUrl => Plugin.NotificationSetupModuleUrl;
 
-        public async Task SendNotification(UserNotification request, CancellationToken cancellationToken)
+        public async Task SendNotification(InternalNotificationRequest request, CancellationToken cancellationToken)
         {
-            var options = GetOptions(request.User);
+            var options = request.Configuration.Options;
+
+            options.TryGetValue("Token", out string token);
+            options.TryGetValue("ServerUrl", out string serverUrl);
 
             var parameters = new Dictionary<string, string>
                 {
-                    {"token", options.Token},
-                    {"url", options.Url},
+                    {"token", token},
+                    {"server", serverUrl},
                 };
 
             // TODO: Improve this with escaping based on what Gotify api requires
-            var messageTitle = request.Name.Replace("&", string.Empty);
+            var messageTitle = request.Title.Replace("&", string.Empty);
 
             if (string.IsNullOrEmpty(request.Description))
                 parameters.Add("message", messageTitle);
@@ -61,11 +58,9 @@ namespace MediaBrowser.Plugins.GotifyNotifications
                 parameters.Add("message", request.Description);
             }
 
-            _logger.Debug("Gotify to Token : {0} - {1}", options.Token, request.Description);
-
             var httpRequestOptions = new HttpRequestOptions
             {
-                Url = options.Url+"/message?token="+options.Token,
+                Url = serverUrl+"/message?token="+token,
                 CancellationToken = cancellationToken
             };
 
@@ -75,12 +70,6 @@ namespace MediaBrowser.Plugins.GotifyNotifications
             {
 
             }
-        }
-
-        private bool IsValid(GotifyOptions options)
-        {
-            return !string.IsNullOrEmpty(options.Url) &&
-                !string.IsNullOrEmpty(options.Token);
         }
     }
 }
