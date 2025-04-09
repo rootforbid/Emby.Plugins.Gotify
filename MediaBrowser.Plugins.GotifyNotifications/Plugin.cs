@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using MediaBrowser.Common.Configuration;
+using System.IO;
+using System.Linq;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Model.Plugins;
-using MediaBrowser.Model.Serialization;
-using System.IO;
 using MediaBrowser.Model.Drawing;
-using System.Linq;
 
 namespace MediaBrowser.Plugins.GotifyNotifications
 {

@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
-using MediaBrowser.Common.Net;
-using MediaBrowser.Controller.Entities;
-using MediaBrowser.Controller.Notifications;
-using MediaBrowser.Model.Logging;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Emby.Notifications;
-using MediaBrowser.Controller.Configuration;
+using MediaBrowser.Common.Net;
+using MediaBrowser.Model.Logging;
 using MediaBrowser.Controller;
 
 namespace MediaBrowser.Plugins.GotifyNotifications
@@ -45,17 +41,14 @@ namespace MediaBrowser.Plugins.GotifyNotifications
                 {
                     {"token", token},
                     {"server", serverUrl},
+                    {"title", "Emby"}
                 };
 
-            // TODO: Improve this with escaping based on what Gotify api requires
-            var messageTitle = request.Title.Replace("&", string.Empty);
-
-            if (string.IsNullOrEmpty(request.Description))
-                parameters.Add("message", messageTitle);
+            if (string.IsNullOrEmpty(request.Title))
+                parameters.Add("message", request.Description);
             else
             {
-                parameters.Add("title", messageTitle);
-                parameters.Add("message", request.Description);
+                parameters.Add("message", request.Title);
             }
 
             var httpRequestOptions = new HttpRequestOptions

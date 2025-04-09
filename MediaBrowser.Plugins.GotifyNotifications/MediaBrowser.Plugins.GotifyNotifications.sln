@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1706.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaBrowser.Plugins.GotifyNotifications", "MediaBrowser.Plugins.GotifyNotifications.csproj", "{235B9AE4-E873-4366-A502-2A4653C0EBE0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{235B9AE4-E873-4366-A502-2A4653C0EBE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{235B9AE4-E873-4366-A502-2A4653C0EBE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{235B9AE4-E873-4366-A502-2A4653C0EBE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{235B9AE4-E873-4366-A502-2A4653C0EBE0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FB3B049-BB8C-46CD-B37C-16E49405F9C9}
+	EndGlobalSection
+EndGlobal
