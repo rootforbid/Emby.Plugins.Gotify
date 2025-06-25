@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +6,7 @@ using Emby.Notifications;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
 using MediaBrowser.Controller;
+using System.Web;
 
 namespace MediaBrowser.Plugins.GotifyNotifications
 {
@@ -36,6 +37,7 @@ namespace MediaBrowser.Plugins.GotifyNotifications
 
             options.TryGetValue("Token", out string token);
             options.TryGetValue("ServerUrl", out string serverUrl);
+            options.TryGetValue("Priority", out string priority);
 
             var parameters = new Dictionary<string, string>
                 {
@@ -44,12 +46,16 @@ namespace MediaBrowser.Plugins.GotifyNotifications
                     {"title", "Emby"}
                 };
 
+
             if (string.IsNullOrEmpty(request.Title))
-                parameters.Add("message", request.Description);
+                parameters.Add("message", HttpUtility.UrlEncode(request.Description));
             else
             {
-                parameters.Add("message", request.Title);
+                parameters.Add("message", HttpUtility.UrlEncode(request.Title));
             }
+
+            if (!string.IsNullOrEmpty(priority))
+                parameters.Add("priority", priority);
 
             var httpRequestOptions = new HttpRequestOptions
             {
