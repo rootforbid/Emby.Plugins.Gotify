@@ -9,6 +9,7 @@ define(['globalize', 'pluginManager', 'emby-input'], function (globalize, plugin
         entry.FriendlyName = context.querySelector('.txtFriendlyName').value;
         entry.Options.Token = context.querySelector('.txtToken').value;
         entry.Options.ServerUrl = context.querySelector('.txtServerUrl').value;
+        entry.Options.Priority = context.querySelector('.selectPriority').value;
     };
 
     EntryEditor.setFormValues = function (context, entry) {
@@ -16,6 +17,7 @@ define(['globalize', 'pluginManager', 'emby-input'], function (globalize, plugin
         context.querySelector('.txtFriendlyName').value = entry.FriendlyName || '';
         context.querySelector('.txtToken').value = entry.Options.Token || '';
         context.querySelector('.txtServerUrl').value = entry.Options.ServerUrl || '';
+        context.querySelector('.selectPriority').value = entry.Options.Priority || '4';
     };
 
     EntryEditor.loadTemplate = function (context) {
